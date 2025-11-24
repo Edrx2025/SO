@@ -1,0 +1,20 @@
+{
+  "procesos": [
+    {"pid": 25, "estado": "RUNNING", "burst": 15, "prioridad": 4}
+  ],
+  "cola_listos": [],
+  "cola_bloqueados": [],
+  "cola_es": [],
+  "pcb": {
+    "PID": 25,
+    "Estado": "RUNNING",
+    "PC": 0,
+    "Prioridad": 4,
+    "Tiempo Restante": 15,
+    "Memoria Base": 5700
+  },
+  "memoria": [
+    {"id": 1, "inicio": 5700, "tam": 100, "proceso": 25}
+  ],
+  "logs": ["[Tick 581] Ejecutando PID 25 (Restante: 15)"]
+}
