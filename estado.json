@@ -1,22 +1,22 @@
 {
   "procesos": [
-    {"pid": 5, "estado": "RUNNING", "burst": 3, "prioridad": 4},
-    {"pid": 6, "estado": "READY", "burst": 24, "prioridad": 2}
+    {"pid": 1, "estado": "RUNNING", "burst": 9, "prioridad": 2},
+    {"pid": 2, "estado": "READY", "burst": 12, "prioridad": 3}
   ],
-  "cola_listos": [6],
+  "cola_listos": [2],
   "cola_bloqueados": [],
   "cola_es": [],
   "pcb": {
-    "PID": 5,
+    "PID": 1,
     "Estado": "RUNNING",
     "PC": 0,
-    "Prioridad": 4,
-    "Tiempo Restante": 3,
-    "Memoria Base": 900
+    "Prioridad": 2,
+    "Tiempo Restante": 9,
+    "Memoria Base": 100
   },
   "memoria": [
-    {"id": 1, "inicio": 900, "tam": 100, "proceso": 5},
-    {"id": 2, "inicio": 1200, "tam": 100, "proceso": 6}
+    {"id": 1, "inicio": 100, "tam": 200, "proceso": 1},
+    {"id": 2, "inicio": 300, "tam": 50, "proceso": 2}
   ],
-  "logs": ["[Tick 124] Ejecutando PID 5 (Restante: 3)"]
+  "logs": ["[Tick 34] Ejecutando PID 1 (Tiempo Restante: 9)"]
 }

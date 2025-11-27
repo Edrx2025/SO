@@ -9,8 +9,6 @@
 #include <unistd.h>
 #endif
 
-#include "procesos.h"
-#include "scheduler.h"
 #include "cpu.h"
 
 // Buffer para logs (simulación simple de logs)
@@ -173,7 +171,7 @@ int main() {
     crearProceso(2, 200, 100);
     crearProceso(3, 50, 300);
     
-    setPolitica(RR); // Usar Round Robin
+    setPolitica(FCFS); // Usando FirstComeFirstServed
     setQuantum(3);
 
     int tick = 0;
@@ -189,10 +187,10 @@ int main() {
         PCB* running = cpu_getProceso();
         if(running) {
             char buffer[100];
-            snprintf(buffer, 100, "[Tick %d] Ejecutando PID %d (Restante: %d)", tick, running->pid, running->tiempo_restante);
+            snprintf(buffer, 100, "[Tick %d] Ejecutando PID %d (Tiempo Restante: %d)", tick, running->pid, running->tiempo_restante);
             registrar_log(buffer);
         } else {
-            registrar_log("[Tick] CPU Ociosa - Esperando procesos...");
+            registrar_log("[Tick] CPU Libre - Esperando procesos...");
             
             // Simular llegada de nuevos procesos aleatorios
             if(tick % 10 == 0) {
@@ -206,9 +204,9 @@ int main() {
 
         // Pausa para que la visualización sea apreciable (500ms)
         #ifdef _WIN32
-            Sleep(1000); 
+            Sleep(500000); 
         #else
-            usleep(1000000); 
+            usleep(500000); 
         #endif
     }
 
