@@ -73,7 +73,7 @@ void initMemoria(int tama_total){
     memoria[0].id=id_bloque;
     memoria[0].inicio=0;
     memoria[0].tam=tama_total;
-    memoria[0].pid=-1;
+    memoria[0].pid=-1; //Marca el inicio del bloque total como libre
     total_bloques++;
     id_bloque++;
 }
