@@ -39,7 +39,7 @@ void cpu_tick(){
     //Si el proceso terminó, CPU queda libre
     if(cpu_proceso_running->tiempo_restante<=0){
         printf("\n[CPU]: Proceso PID %i ha terminado\n",cpu_proceso_running->pid);
-        terminarProcesoPorPuntero(cpu_proceso_running); //Movemos ese proceso a la cola de terminados
+        terminarProcesoPorPuntero(cpu_proceso_running); //Movemos ese proceso a la cola de terminados y liberamos memoria
         cpu_liberar();
         return;
     }

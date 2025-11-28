@@ -22,7 +22,7 @@
     }PCB;
 
     //Declaración de métodos
-    PCB* crearProceso(int,int,int);
+    PCB* crearProceso(int,int);
     PCB* obtenerSiguienteReady();
     void bloquearProceso(int);
     void desbloquearProceso(int);

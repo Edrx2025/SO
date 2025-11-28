@@ -3,6 +3,7 @@
 #include "string.h"
 #include "time.h"
 #include "procesos.h"
+#include "memoria.h"
 
 //Variables globales
 PCB* cola_ready[MAX_PROCESOS];
@@ -61,18 +62,27 @@ PCB* buscar_en_cola(PCB** cola,int size,int pid, int* pos){
 
 //--Implementación de los métodos del archivo de cabecera--
 
-PCB* crearProceso(int prioridad,int tam_memoria,int dir_base){
+PCB* crearProceso(int prioridad,int tam_memoria){
     PCB* nuevoProceso= (PCB*) malloc(sizeof(PCB));
-
+    
     nuevoProceso->pid=ultimo_pid;
     nuevoProceso->estado=READY;
     nuevoProceso->tiempo_total=10+rand() %20; //Tiempo aleatorio;
     nuevoProceso->tiempo_restante=nuevoProceso->tiempo_total;
     nuevoProceso->prioridad=prioridad;
     nuevoProceso->tam_memoria=tam_memoria;
-    nuevoProceso->direccion_base=dir_base;
     nuevoProceso->pc=0;
 
+    //Asignación de memoria
+    int direccion=asignarMemoria(ultimo_pid,tam_memoria);
+
+    //->Si no hay memoria disponible
+    if(direccion==-1){
+        free(nuevoProceso);
+        return NULL;
+    }
+
+    nuevoProceso->direccion_base=direccion;
     ultimo_pid++;    //Incrementamos el process id
     agregar_a_cola(cola_ready,&size_ready,nuevoProceso);
 
@@ -136,6 +146,8 @@ void terminarProceso(int pid){
 
     p->estado=TERMINATED;
     agregar_a_cola(cola_terminated,&size_terminated,p);
+    
+    liberarMemoria(pid);
 }
 
 PCB* buscarProceso(int pid){
@@ -216,6 +228,7 @@ void terminarProcesoPorPuntero(PCB* p){
 
     p->estado=TERMINATED;
     agregar_a_cola(cola_terminated,&size_terminated,p);
+    liberarMemoria(p->pid);
 }
 
 

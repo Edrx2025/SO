@@ -10,6 +10,7 @@
 #endif
 
 #include "cpu.h"
+#include "memoria.h"
 
 // Buffer para logs (simulación simple de logs)
 char ultimo_log[256] = "Sistema iniciado...";
@@ -122,31 +123,17 @@ void exportar_estado_json() {
         fprintf(fp, "  \"pcb\": {},\n");
     }
 
-    // 4) MEMORIA (basado en los procesos que tenemos; ejemplo simple)
-    fprintf(fp, "  \"memoria\": [\n");
-    int mem_first = 1;
-    // incluir running como bloque 1
-    if (running) {
-        fprintf(fp, "    {\"id\": 1, \"inicio\": %d, \"tam\": %d, \"proceso\": %d}",
-                running->direccion_base, running->tam_memoria, running->pid);
-        mem_first = 0;
+    // 4) MEMORIA
+    fprintf(fp, " \"memoria\": [\n");
+    int nb = 0;
+    BloqueMemoria* bloques = getBloquesMemoria(&nb);
+    for (int i = 0; i < nb; ++i) {
+        if (i) fprintf(fp, ",\n");
+        fprintf(fp, " {\"id\": %d, \"inicio\": %d, \"tam\": %d, \"proceso\": %d}",
+                bloques[i].id, bloques[i].inicio, bloques[i].tam,
+                (bloques[i].pid == -1) ?  -1 : bloques[i].pid);
     }
-    for (int i = 0; i < size_ready; i++) {
-        PCB *p = getReady(i);
-        if (!mem_first) fprintf(fp, ",\n");
-        fprintf(fp, "    {\"id\": %d, \"inicio\": %d, \"tam\": %d, \"proceso\": %d}",
-                i + 2, p->direccion_base, p->tam_memoria, p->pid);
-        mem_first = 0;
-    }
-    // agregar bloqueados a memoria también
-    for (int i = 0; i < size_blocked; i++) {
-        PCB *p = getBlocked(i);
-        if (!mem_first) fprintf(fp, ",\n");
-        fprintf(fp, "    {\"id\": %d, \"inicio\": %d, \"tam\": %d, \"proceso\": %d}",
-                size_ready + i + 2, p->direccion_base, p->tam_memoria, p->pid);
-        mem_first = 0;
-    }
-    fprintf(fp, "\n  ],\n");
+    fprintf(fp, "\n ],\n");
 
     // 5) LOGS (array)
     fprintf(fp, "  \"logs\": [");
@@ -167,9 +154,9 @@ int main() {
     exportar_estado_json();
 
     // Crear procesos iniciales
-    crearProceso(1, 100, 0);
-    crearProceso(2, 200, 100);
-    crearProceso(3, 50, 300);
+    crearProceso(1, 100);
+    crearProceso(2, 200);
+    crearProceso(3, 50);
     
     setPolitica(FCFS); // Usando FirstComeFirstServed
     setQuantum(3);
@@ -194,7 +181,7 @@ int main() {
             
             // Simular llegada de nuevos procesos aleatorios
             if(tick % 10 == 0) {
-                crearProceso(rand()%5, 100, tick*10);
+                crearProceso(rand()%5, rand()%100);
                 registrar_log("¡Nuevo proceso creado!");
             }
         }

@@ -209,15 +209,15 @@ class SistemaOperativoUI(ctk.CTk):
         self.colas_box.delete("0.0", "end")
         self.colas_box.insert("end", "Listos:\n")
         for pid in data.get("cola_listos", []):
-            self.colas_box.insert("end", f"  → {pid}\n")
+            self.colas_box.insert("end", f" Proceso PID → {pid}\n")
 
         self.colas_box.insert("end", "\nBloqueados:\n")
         for pid in data.get("cola_bloqueados", []):
-            self.colas_box.insert("end", f"  → {pid}\n")
+            self.colas_box.insert("end", f" Proceso PID → {pid}\n")
 
         self.colas_box.insert("end", "\nE/S:\n")
         for pid in data.get("cola_es", []):
-            self.colas_box.insert("end", f"  → {pid}\n")
+            self.colas_box.insert("end", f" Proceso PID → {pid}\n")
 
         # PCB
         self.pcb_box.delete("0.0", "end")
