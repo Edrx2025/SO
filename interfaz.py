@@ -147,7 +147,7 @@ class SimuladorApp:
         # Botones de acción
         ttk.Button(panel, text="➕ Agregar Proceso Manual", command=self.popup_manual, 
                   style='Action.TButton').pack(fill='x', pady=5, ipady=3)
-        ttk.Button(panel, text="🎲 Generar Test Automático", command=self.generar_test,
+        ttk.Button(panel, text="🎲 Generar Procesos De Forma Aleatorio", command=self.generar_test,
                   style='Action.TButton').pack(fill='x', pady=5, ipady=3)
         self.btn_run = ttk.Button(panel, text="▶ INICIAR SIMULACIÓN", command=self.toggle,
                                   style='Action.TButton')

@@ -67,7 +67,7 @@ class CPU:
         else:
             # Para FCFS, SJF, Prioridad: posibilidad de bloqueo por I/O
             if random.random() < 0.01:  # 1% de probabilidad de bloqueo
-                tiempo_bloqueo = random.randint(3, 8)
+                tiempo_bloqueo = random.randint(5, 20)
                 resultado['bloqueado_io'] = True
                 resultado['tiempo_bloqueo'] = tiempo_bloqueo
                 return resultado
