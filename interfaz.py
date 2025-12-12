@@ -6,6 +6,7 @@ Interfaz del simulador del sistema operativo
 import tkinter as tk
 from tkinter import ttk, messagebox
 import time
+import random
 
 from constantes import *
 from coordinador import CoordinadorSO
@@ -335,12 +336,73 @@ class SimuladorApp:
         ttk.Button(btn_frame, text="✗ Cancelar", command=top.destroy).pack(side=tk.LEFT, expand=True, padx=(5, 0), ipady=8)
 
     def generar_test(self):
-        """Genera procesos de prueba"""
-        datos = [(100, 20, 5), (100, 5, 1), (100, 10, 3), (100, 2, 4)]
-        for s, b, p in datos:
-            self.coordinador.agregar_proceso(s, b, p)
-        self.log("Test generado.")
-        self.update_ui()
+        """
+        Abre una ventana para generar N procesos con atributos aleatorios
+        """
+        top = tk.Toplevel(self.root)
+        top.title("🎲 Generador Aleatorio")
+        top.geometry("350x220")
+        top.configure(bg=COLOR_FONDO_SECUNDARIO)
+        top.resizable(False, False)
+        
+        # Comportamiento modal (bloquea la ventana principal)
+        top.transient(self.root)
+        top.grab_set()
+        
+        main_frame = ttk.Frame(top, padding=20, style='TFrame')
+        main_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Título
+        ttk.Label(main_frame, text="Configuración de Generación", 
+                 font=('Segoe UI', 11, 'bold'), foreground=COLOR_TEXTO_DORADO,
+                 background=COLOR_FONDO_SECUNDARIO).pack(pady=(0, 20))
+        
+        # Campo para cantidad
+        frame_cnt = ttk.Frame(main_frame, style='TFrame')
+        frame_cnt.pack(fill='x', pady=10)
+        
+        ttk.Label(frame_cnt, text="Cantidad de procesos a generar:", font=('Segoe UI', 9),
+                 foreground=COLOR_TEXTO_CLARO, background=COLOR_FONDO_SECUNDARIO).pack(anchor='w')
+        
+        e_cantidad = ttk.Entry(frame_cnt, font=('Segoe UI', 9), width=25)
+        e_cantidad.pack(fill='x', pady=(5, 0))
+        e_cantidad.insert(0, "5") # Valor por defecto
+        e_cantidad.focus() # Poner el foco aquí
+
+        def confirmar_generacion():
+            try:
+                cantidad = int(e_cantidad.get())
+                if cantidad <= 0:
+                    messagebox.showerror("Error", "La cantidad debe ser mayor a 0")
+                    return
+                
+                # Generación de procesos aleatorios
+                for _ in range(cantidad):
+                    # Rangos aleatorios definidos:
+                    # Tamaño: Entre 20KB y 200KB (para que quepan varios en 1024KB)
+                    size = random.randint(20, 200)
+                    # Burst Time: Entre 5 seg y 30 seg
+                    burst = random.randint(5, 30)
+                    # Prioridad: Entre 1 y 5
+                    prio = random.randint(1, 5)
+                    
+                    self.coordinador.agregar_proceso(size, burst, prio)
+                
+                self.log(f"🎲 Se generaron {cantidad} procesos aleatorios.")
+                self.update_ui()
+                top.destroy()
+                
+            except ValueError:
+                messagebox.showerror("Error", "Por favor ingrese un número entero válido.")
+
+        # Botones
+        btn_frame = ttk.Frame(main_frame, style='TFrame')
+        btn_frame.pack(fill='x', pady=(20, 0))
+        
+        ttk.Button(btn_frame, text="✓ Confirmar y Agregar", command=confirmar_generacion, 
+                  style='Action.TButton').pack(side=tk.LEFT, expand=True, padx=(0, 5), ipady=5)
+        
+        ttk.Button(btn_frame, text="✗ Cancelar", command=top.destroy).pack(side=tk.LEFT, expand=True, padx=(5, 0), ipady=5)
 
     def toggle(self):
         """Inicia/pausa la simulación"""
@@ -543,4 +605,3 @@ class SimuladorApp:
         else:
             self.lbl_hover.config(text="Pasa el mouse sobre la memoria para ver detalles", 
                                  foreground=COLOR_TEXTO_DORADO)
-
